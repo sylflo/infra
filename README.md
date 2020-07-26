@@ -52,12 +52,10 @@ virsh edit pfsense
 You have to remove the cdrom boot so the vm can boot on the hard disk
 Once this is done, you need to reboot the vm and copy the old config (if you have one)
 
-### misc
+### VPN (Wireguard)
 
-Once the vm is created you will need to provision it using Ansible
-```
-ansible-playbook -i inventory wireguard.yml
-```
+Once the vpn vm is created, you will need to install wireguard
+
 
 ### Kubernetes
 
