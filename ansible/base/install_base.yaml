@@ -1,0 +1,84 @@
+---
+- hosts: hypervisor
+  remote_user: "{{ username }}"
+  become: yes
+
+  roles:
+    - role: jnv.unattended-upgrades
+      unattended_origins_patterns:
+        - 'origin=Debian,codename=${distro_codename},label=Debian-Security' # security updates
+        - 'o=Debian,codename=${distro_codename},label=Debian' # updates including non-security updates
+        - 'o=Debian,codename=${distro_codename},a=proposed-updates'
+      unattended_mail: 'dev.chateau@gmail.com'
+    - role: stackhpc.libvirt-host
+
+  tasks:
+    # Mount disk for k8s
+    - name: Mount sda
+      mount:
+        path: /mnt/data
+        src: /dev/sda
+        fstype: ext4
+        state: mounted
+    - name: Change owner /mnt/data
+      file:
+        path: /mnt/data
+        state: directory
+        recurse: yes
+        owner: "{{ username }}"
+        group: "{{ username }}"
+
+    # Install libvirt and cockpit
+    - name: "Added security_driver none"
+      lineinfile:
+        path: /etc/libvirt/qemu.conf
+        regexp: '^#security_driver = "selinux"'
+        line: security_driver = "none"
+    - name: Add user to group libvirt
+      user:
+        name: "{{ username }}"
+        groups: libvirt
+        append: yes
+    - name: Install cockpit and bridge-utils
+      apt:
+        pkg:
+        - cockpit
+        - cockpit-machines
+        - bridge-utils
+    - name: Start and enabled service cockpit
+      service:
+        name: cockpit
+        enabled: yes
+        state: started
+    
+    # Get pfsense iso
+    - name: Create a directory if it does not exist
+      file:
+        path:  /var/lib/libvirt/images/pfsense
+        state: directory
+        mode: '0755'
+    - name: Download and unarchive pfsense iso file
+      unarchive:
+        src: https://frafiles.pfsense.org/mirror/downloads/{{ pfsense_version }}.iso.gz
+        dest: /var/lib/libvirt/images/pfsense
+        remote_src: yes
+    - name: Change pfsense iso name
+      command: mv /var/lib/libvirt/images/pfsense/{{ pfsense_version }}.iso pfSense.iso
+    - name: Change file ownership, group and permissions
+      file:
+        path: /var/lib/libvirt/images/pfsense/pfSense.iso
+        owner: "{{ username }}"
+
+    # Set static ip address for br0
+    - name: Copy interfaces file in /etc/network/interfaces
+      template:
+        src: hypervisor/interfaces.j2
+        dest: /etc/network/interfaces
+        owner: root
+        group: root
+        mode: '0644'
+      vars:
+        ip_address: "{{ br0_ip_address }}"
+        ip_gateway: "{{ br0_ip_gateway }}"
+    - name: Reboot
+      reboot:
