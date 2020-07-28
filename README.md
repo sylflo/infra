@@ -63,11 +63,16 @@ Once the vpn vm is created, you will need to install wireguard
 
 Once the vm are created:
 
-attach /dev/sdx (disk only for data) to worker-1, example
+- attach /dev/sdx (disk only for data) to worker-1, example
+
+`sudo mkdir  /var/lib/rancher/k3s/storage`
+
 ```
-sudo mkdir  /var/lib/rancher/k3s/storage
-sudo mount /dev/vdb /var/lib/rancher/k3s/storage
+/etc/fstab
+/dev/vdb       /var/lib/rancher/k3s/storage            ext4    defaults        0 2
 ```
+
+Reload fstab `sudo mount -a`
 
 - you will need to provision each of them like this
 ```
