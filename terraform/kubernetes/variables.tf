@@ -39,5 +39,6 @@ variable "vm_workers" {
         ip_address  = string
         ip_gateway  = string
         ip_dns      = string
+        attach_disk = bool
     }))
 }

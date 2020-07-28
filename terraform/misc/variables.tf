@@ -24,5 +24,5 @@ variable "vms" {
 
 variable "source_img" {
   type = string
-  default = "https://cloud-images.ubuntu.com/releases/xenial/release/ubuntu-16.04-server-cloudimg-amd64-disk1.img"
+  default = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
 }

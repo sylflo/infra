@@ -5,4 +5,4 @@ ethernets:
       - ${ip_address}/24
     gateway4: ${ip_gateway}
     nameservers:
-      addresses: ${ip_dns}
+      addresses: [${ip_dns}]

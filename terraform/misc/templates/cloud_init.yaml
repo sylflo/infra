@@ -4,6 +4,7 @@ users:
   - name: ubuntu
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-    lock-passwd: false
+    lock_passwd: false
+    passwd: $1$7IiAD+oL$x74MQltAZhAzAsa.xeVmG/
     ssh_authorized_keys:
       - ${public_ssh_key}

@@ -64,7 +64,7 @@ module "misc" {
       cpu         = 2,
       ip_address  = "192.168.0.20"
       ip_gateway  = "192.168.0.254"
-      ip_dns      = "8.8.8.8"
+      ip_dns      = "193.138.218.74"
     },
   ]
 }
@@ -76,26 +76,31 @@ module "kubernetes" {
   ssh_user    = var.ssh_user
   public_ssh_key = var.public_ssh_key
   vm_name_prefix = "k8s"
-  vm_masters = [{
-    memory      = "4096"
-    cpu         = 2
-    ip_address  = "192.168.10.20"
-    ip_gateway  = "192.168.10.254"
-    ip_dns      = "193.138.218.74"
-  }]
-  vm_workers = [{
-    memory      = "4096"
-    cpu         = 2
-    ip_address  = "192.168.10.30"
-    ip_gateway  = "192.168.10.254"
-    ip_dns      = "193.138.218.74"
-  },
-  {
-    memory      = "8192"
-    cpu         = 2
-    ip_address  = "192.168.10.31"
-    ip_gateway  = "192.168.10.254"
-    ip_dns      = "193.138.218.74"
-  }
+  vm_masters = [
+    {
+      memory      = "4096"
+      cpu         = 2
+      ip_address  = "192.168.10.20"
+      ip_gateway  = "192.168.10.254"
+      ip_dns      = "193.138.218.74"
+    }
+  ]
+  vm_workers = [
+    {
+      memory      = "4096"
+      cpu         = 2
+      ip_address  = "192.168.10.30"
+      ip_gateway  = "192.168.10.254"
+      ip_dns      = "193.138.218.74"
+      attach_disk = false
+    },
+    {
+      memory      = "8192"
+      cpu         = 2
+      ip_address  = "192.168.10.31"
+      ip_gateway  = "192.168.10.254"
+      ip_dns      = "193.138.218.74"
+      attach_disk = true
+    }
   ]
 }

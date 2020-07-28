@@ -91,10 +91,6 @@ resource "libvirt_domain" "ubuntu-machine_master" {
     volume_id     = element(libvirt_volume.ubuntu_disk_master.*.id, count.index)
   }
 
-  xml {
-    xslt = file("./kubernetes/filesystem.xsl")
-  }
-
 }
 
 # ===============================================================================
@@ -174,8 +170,11 @@ resource "libvirt_domain" "ubuntu-machine_worker" {
     volume_id     = element(libvirt_volume.ubuntu_disk_worker.*.id, count.index)
   }
 
-  xml {
-    xslt = file("./kubernetes/filesystem.xsl")
+  dynamic "disk" {
+    for_each = var.vm_workers[count.index].attach_disk == false ? [] : [1]
+    content {
+      block_device = "/dev/sda"
+    }
   }
 
 }

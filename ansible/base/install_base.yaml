@@ -13,21 +13,6 @@
     - role: stackhpc.libvirt-host
 
   tasks:
-    # Mount disk for k8s
-    - name: Mount sda
-      mount:
-        path: /mnt/data
-        src: /dev/sda
-        fstype: ext4
-        state: mounted
-    - name: Change owner /mnt/data
-      file:
-        path: /mnt/data
-        state: directory
-        recurse: yes
-        owner: "{{ username }}"
-        group: "{{ username }}"
-
     # Install libvirt and cockpit
     - name: "Added security_driver none"
       lineinfile:

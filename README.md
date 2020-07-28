@@ -63,11 +63,10 @@ Once the vpn vm is created, you will need to install wireguard
 
 Once the vm are created:
 
-- launch the playbook in the kubernetes folder, it will mount the folder /mnt/data from the host
-into /mnt for each k8s vm
+attach /dev/sdx (disk only for data) to worker-1, example
 ```
-cd kubernetes/
-ansible-playbook  -i ../inventory kubernetes.yaml 
+sudo mkdir  /var/lib/rancher/k3s/storage
+sudo mount /dev/vdb /var/lib/rancher/k3s/storage
 ```
 
 - you will need to provision each of them like this
