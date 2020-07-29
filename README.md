@@ -63,21 +63,10 @@ Once the vpn vm is created, you will need to install wireguard
 
 Once the vm are created:
 
-- attach /dev/sdx (disk only for data) to worker-1, example
-
-`sudo mkdir  /var/lib/rancher/k3s/storage`
-
-```
-/etc/fstab
-/dev/vdb       /var/lib/rancher/k3s/storage            ext4    defaults        0 2
-```
-
-Reload fstab `sudo mount -a`
-
 - you will need to provision each of them like this
 ```
 # For master
-k3sup install --ip 192.168.10.20 --user ubuntu --ssh-key /Users/sylflo/.ssh/server_rsa --k3s-extra-args '--no-deploy traefik --flannel-backend=none --cluster-cidr=192.168.11.0/24'
+k3sup install --ip 192.168.10.20 --user ubuntu --ssh-key /Users/sylflo/.ssh/server_rsa --k3s-extra-args '--no-deploy traefik --no-deploy servicelb --flannel-backend=none --cluster-cidr=192.168.11.0/24'
 
 # For nodes
 k3sup join --ip 192.168.10.30 --server-ip 192.168.10.20 --user ubuntu --ssh-key /Users/sylflo/.ssh/server_rsa
@@ -90,6 +79,17 @@ qemu-img resize ubuntu-master-1.qcow2 +10G
 qemu-img resize ubuntu-worker-1.qcow2 +10G
 qemu-img resize ubuntu-worker-2.qcow2 +10G
 ```
+
+- attach /dev/sdx (disk only for data) to worker-1, example
+
+`sudo mkdir  /var/lib/rancher/k3s/storage`
+
+```
+/etc/fstab
+/dev/vdb       /var/lib/rancher/k3s/storage            ext4    defaults        0 2
+```
+
+Reload fstab `sudo mount -a`
 
 ### Provision cluster
 
@@ -112,5 +112,5 @@ kubectl apply -n seedbox -f -
 
 After cert-manager and metalLB are provisionned, install nginx ingress using helm3
 
-`helm install my-release ingress-nginx/ingress-nginx `
+`helm install nginx ingress-nginx/ingress-nginx`
 
