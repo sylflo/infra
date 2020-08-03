@@ -44,6 +44,18 @@ module "cloudflare" {
       name        = "radarr",
       ip_address  = "192.168.10.20"
     },
+    {
+      name        = "grafana",
+      ip_address  = "192.168.10.20"
+    },
+    {
+      name        = "prometheus",
+      ip_address  = "192.168.10.20"
+    },
+    {
+      name        = "alertmanager",
+      ip_address  = "192.168.10.20"
+    },
   ]
 }
 

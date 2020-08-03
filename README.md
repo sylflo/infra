@@ -131,11 +131,19 @@ metadata:
   name: default
 ```
 
-
-
 #### Velero
 
 Once the whole cluster is provisionned, launch this command to create a cron backup for velero
 ```
 velero schedule create whole-cluster-monthly --schedule "0 0 1 * *" 
 ```
+
+#### Monitoring
+
+Create a namespace and install prometheus with grafana using helm
+```
+kubectl create namespace monitoring
+kubens monitoring
+helm install monitoring stable/prometheus-operator
+```
+
