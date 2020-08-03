@@ -112,5 +112,30 @@ kubectl apply -n seedbox -f -
 
 After cert-manager and metalLB are provisionned, install nginx ingress using helm3
 
-`helm install nginx ingress-nginx/ingress-nginx`
+```
+kubens default
+helm install nginx ingress-nginx/ingress-nginx
+```
 
+You need to edit the default namespace to add a label for network policy
+```
+kubectl edit ns default 
+```
+
+And add the label like so
+```
+metadata:
+  creationTimestamp: ""
+  labels:
+    app.kubernetes.io/name: default
+  name: default
+```
+
+
+
+#### Velero
+
+Once the whole cluster is provisionned, launch this command to create a cron backup for velero
+```
+velero schedule create whole-cluster-monthly --schedule "0 0 1 * *" 
+```
