@@ -77,7 +77,7 @@ module "misc" {
     {
       name        = "vpn",
       memory      = "1024",
-      cpu         = 2,
+      cpu         = 1,
       ip_address  = "192.168.0.20"
       ip_gateway  = "192.168.0.254"
       ip_dns      = "193.138.218.74"
