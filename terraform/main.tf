@@ -45,15 +45,15 @@ module "cloudflare" {
       ip_address  = "192.168.10.20"
     },
     {
-      name        = "grafana",
+      name        = "grafana-k8s",
       ip_address  = "192.168.10.20"
     },
     {
-      name        = "prometheus",
+      name        = "prometheus-k8s",
       ip_address  = "192.168.10.20"
     },
     {
-      name        = "alertmanager",
+      name        = "alertmanager-k8s",
       ip_address  = "192.168.10.20"
     },
   ]
@@ -76,7 +76,7 @@ module "misc" {
   vms = [
     {
       name        = "vpn",
-      memory      = "1024",
+      memory      = "512",
       cpu         = 1,
       ip_address  = "192.168.0.20"
       ip_gateway  = "192.168.0.254"

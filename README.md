@@ -246,3 +246,7 @@ kubens monitoring
 helm install monitoring stable/prometheus-operator
 ```
 
+
+#### Tips
+
+See here for best practices about k8s cluster
