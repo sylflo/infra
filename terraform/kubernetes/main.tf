@@ -173,7 +173,7 @@ resource "libvirt_domain" "ubuntu-machine_worker" {
   dynamic "disk" {
     for_each = var.vm_workers[count.index].attach_disk == false ? [] : [1]
     content {
-      block_device = "/dev/sda"
+      block_device = "/dev/mapper/md0vg-seedbox"
     }
   }
 
