@@ -1,4 +1,14 @@
 
+terraform {
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+      version = "0.6.2"
+    }
+  }
+  required_version = ">= 0.13"
+}
+
 provider "libvirt" {
   uri = "qemu+ssh://${var.ssh_user}@${var.server_name}/system?socket=/var/run/libvirt/libvirt-sock"
 }
