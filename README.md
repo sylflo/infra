@@ -89,6 +89,10 @@ PrivateKey = yourServerPrivateKey
 
 ## Save and update this config file when a new peer (vpn client) added ##
 SaveConfig = true
+
+# Nat on interface
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o ens3 -j MASQUERADE
 ```
 
 Enable and start service wireguard on the server
