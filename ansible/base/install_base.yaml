@@ -42,17 +42,20 @@
         path:  /var/lib/libvirt/images/pfsense
         state: directory
         mode: '0755'
-    - name: Download and unarchive pfsense iso file
-      unarchive:
-        src: https://frafiles.pfsense.org/mirror/downloads/{{ pfsense_version }}.iso.gz
-        dest: /var/lib/libvirt/images/pfsense
-        remote_src: yes
-    - name: Change pfsense iso name
-      command: mv /var/lib/libvirt/images/pfsense/{{ pfsense_version }}.iso pfSense.iso
-    - name: Change file ownership, group and permissions
-      file:
-        path: /var/lib/libvirt/images/pfsense/pfSense.iso
-        owner: "{{ username }}"
+      tags:
+        - pfsense
+    - name: Download pfsense iso file
+      get_url:
+        url:  https://frafiles.pfsense.org/mirror/downloads/{{ pfsense_version }}.iso.gz
+        dest: /var/lib/libvirt/images/pfsense/pfSense.iso.gz
+      tags:
+        - pfsense
+    - name: Unarchive pfsense iso file
+      command: gunzip pfSense.iso.gz
+      args:
+        chdir: /var/lib/libvirt/images/pfsense/
+      tags:
+        - pfsense
 
     # Set static ip address for br0
     - name: Copy interfaces file in /etc/network/interfaces
