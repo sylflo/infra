@@ -77,7 +77,7 @@ resource "libvirt_domain" "ubuntu-machine_master" {
   vcpu            = var.vm_masters[count.index].cpu
   memory          = var.vm_masters[count.index].memory
 
-  cloudinit     = element(libvirt_cloudinit_disk.commoninit_master.*.id, count.index)
+  cloudinit       = element(libvirt_cloudinit_disk.commoninit_master.*.id, count.index)
 
   network_interface {
     bridge         = "br10"
@@ -184,7 +184,7 @@ resource "libvirt_domain" "ubuntu-machine_worker" {
   dynamic "disk" {
     for_each = var.vm_workers[count.index].attach_disk == false ? [] : [1]
     content {
-      block_device = "/dev/mapper/md0vg-seedbox"
+      block_device = "/dev/mapper/md0vg-seedbox--data"
     }
   }
 
