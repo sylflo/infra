@@ -19,10 +19,6 @@ module "cloudflare" {
       ip_address  = var.public_ip_address
     },
     {
-      name        = "heimdall",
-      ip_address  = var.public_ip_address
-    },
-    {
       name        = "matomo",
       ip_address  = var.public_ip_address
     },
