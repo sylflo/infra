@@ -180,11 +180,4 @@ resource "libvirt_domain" "ubuntu-machine_worker" {
   disk {
     volume_id     = element(libvirt_volume.ubuntu_disk_worker.*.id, count.index)
   }
-
-  dynamic "disk" {
-    for_each = var.vm_workers[count.index].attach_disk == false ? [] : [1]
-    content {
-      block_device = "/dev/mapper/md0vg-seedbox--config"
-    }
-  }
 }
