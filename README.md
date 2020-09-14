@@ -206,7 +206,7 @@ in the git repository
 
 Once cert-manager is provisionned, it is necessary to import the certificate to other namespace
 ```
-kubectl -n cert-manager get -o yaml secret ***REMOVED*** | \
+kubectl -n cert-manager get -o yaml secret your-domain-name-cert | \
 kubectl apply -n seedbox -f -
 ```
 
