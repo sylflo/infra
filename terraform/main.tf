@@ -1,4 +1,10 @@
 
+module "aws_backend" {
+  source      = "./aws_backend"
+
+  bucket_name = var.bucket_name
+}
+
 module "cloudflare" {
   source              = "./cloudflare"
 
