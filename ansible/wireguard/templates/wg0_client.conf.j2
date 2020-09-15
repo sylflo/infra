@@ -1,0 +1,10 @@
+[Interface]
+PrivateKey = {{ client_private_key }}
+Address = 192.168.20.22/24
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = {{ server_public_key }}
+Endpoint =  {{ hypervisor_ip_address }}:{{ wireguard_port }}
+AllowedIPs = 0.0.0.0/0
+PersistentKeepalive = 25

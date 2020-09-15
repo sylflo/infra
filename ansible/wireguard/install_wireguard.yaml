@@ -1,0 +1,59 @@
+---
+- hosts: wireguard
+  remote_user: "ubuntu"
+  become: yes
+
+  tasks:
+    # Set ipv4 forward
+    - sysctl:
+      name: net.ipv4.ip_forward
+      value: '1'
+      sysctl_set: yes
+      state: present
+      reload: yes
+    # Install WireGuard and create keys for server and client
+    - name: "Install wireguard"
+      apt:
+        name: [wireguard, wireguard-tools, openresolv]
+        state: present
+    - name: "Generate public and private key for server"
+      shell: umask 077; wg genkey | tee server_private_key | wg pubkey > server_public_key
+      args:
+        chdir: /tmp
+      delegate_to: localhost
+      become: false
+    - name: "Generate public and private key for client"
+      shell: umask 077; wg genkey | tee client_private_key | wg pubkey > client_public_key
+      args:
+        chdir: /tmp
+      delegate_to: localhost
+      become: false
+
+    # Set WireGuard on the server
+    - name: "Stop service wireguard on the server"
+      systemd:
+        name: wg-quick@wg0
+        state: stopped
+    - name: Copy config wg0.conf for server
+      template:
+        src: ./templates/wg0_server.conf.j2
+        dest: /etc/wireguard/wg0.conf
+      vars:
+        server_private_key: "{{ lookup('file', '/tmp/server_private_key') }}"
+        client_public_key: "{{ lookup('file', '/tmp/client_public_key') }}"
+    - name: "Enable and start service wireguard on the server"
+      systemd:
+        name: wg-quick@wg0
+        state: started
+        enabled: yes
+
+    # Set WireGuard on the client
+    - name: Copy config wg0.conf for client
+      template:
+        src: ./templates/wg0_client.conf.j2
+        dest: /etc/wireguard/wg0.conf
+      vars:
+        client_private_key: "{{ lookup('file', '/tmp/client_private_key') }}"
+        server_public_key: "{{ lookup('file', '/tmp/server_public_key') }}"
+      delegate_to: localhost
+

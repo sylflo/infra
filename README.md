@@ -52,111 +52,27 @@ virsh edit pfsense
 You have to remove the cdrom boot so the vm can boot on the hard disk
 Once this is done, you need to reboot the vm and copy the old config (if you have one)
 
-### VPN (Wireguard)
+### VPN (WireGuard)
 
-Once the vpn vm is created, you will need to install wireguard
+Once the vpn vm is created, use the ansible playbook in wireguard folder to install WireGuard.
 
-Install wireguard on server and client
-```
-sudo apt install wireguard --yes
-```
+Create a main.yaml for example
 
-#### Server
-
-Enable ip forwarding
-`sudo nano /etc/sysctl.conf`
-
-And uncomment
-`net.ipv4.ip_forward=1`
-
-Reboot the machine
-`sudo reboot`
-
-Generate public and private key
-```
-umask 077; wg genkey | tee privatekey | wg pubkey > publickey
+```yaml
+- name: Call playbook to install wireguard
+  import_playbook: install_wireguard.yaml
+  vars:
+    wireguard_port: "4242"
+    server_ip_address: "192.168.20.21/24"
+    client_ip_address: "192.168.20.22/32"
+    hypervisor_ip_address: "XX.XX.XX.XX"
 ```
 
-Open the file `sudo nano /etc/wireguard/wg0.conf` and add this
+And launch this command to install WireGuard with a config for the server and client
 
-```
-[Interface]
-## Your VPN server private IP address ##
-Address = 192.168.20.21/24
-
-## VPN server's private key
-PrivateKey = yourServerPrivateKey
-
-## Save and update this config file when a new peer (vpn client) added ##
-SaveConfig = true
-
-# Nat on interface
-PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE
-PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o ens3 -j MASQUERADE
-```
-
-Enable and start service wireguard on the server
-```
-sudo systemctl enable wg-quick@wg0 --now
-sudo systemctl status wg-quick@wg0
-```
-
-Check the wg0 interface is up and running
-```
-sudo wg
-sudo ip a show wg0
-```
-
-#### Client
-
-Generate public and private key
-```
-umask 077; wg genkey | tee privatekey | wg pubkey > publickey
-```
-
-Open the file `sudo nano /etc/wireguard/wg0.conf` and add this
-
-```
-[Interface]
-PrivateKey = yourClientPrivateKey
-Address = 192.168.20.22/24
-DNS = 1.1.1.1
-
-[Peer]
-PublicKey = yourServerPublicKey
-Endpoint =  yourServerIpAddress:34762
-AllowedIPs = 0.0.0.0/0
-PersistentKeepalive = 25
-```
-
-Start vpn
-```
-sudo wg-quick up wg0
-```
-
-#### Add client peer to server
-
-Stop the service
-`sudo systemctl stop wg-quick@wg0`
-
-Open the file `sudo nano /etc/wireguard/wg0.conf` and add this to the end of the file
-
-```
-[Peer]
-## Client PublicKey ##
-PublicKey = yourClientPublicKey
-
-## client VPN IP address (note  the /32 subnet) ##
-AllowedIPs = 192.168.20.22/32
-```
-
-Restart wireguard service wg0 interface
-`sudo systemctl restart wg-quick@wg0`
-
-Check the wg0 interface is showing the peer
-```
-sudo wg
-sudo ip a show wg0
+```bash
+cd wireguard/
+ansible-playbook  -i ../inventory ./main.yaml 
 ```
 
 ### NFS

@@ -1,0 +1,23 @@
+[Interface]
+## Your VPN server private IP address ##
+Address = {{ server_ip_address }}
+
+## WireGuard server port
+ListenPort = {{ wireguard_port }}
+
+## VPN server's private key
+PrivateKey = {{ server_private_key }}
+
+## Save and update this config file when a new peer (vpn client) added ##
+SaveConfig = true
+
+# Nat on interface
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o ens3 -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o ens3 -j MASQUERADE
+
+[Peer]
+## Client PublicKey ##
+PublicKey = {{ client_public_key }}
+
+## client VPN IP address (note  the /32 subnet) ##
+AllowedIPs = {{ client_ip_address }}
