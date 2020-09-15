@@ -1,0 +1,16 @@
+---
+- hosts: hypervisor
+  remote_user: "sylflo"
+  become: yes
+  roles:
+    - role: geerlingguy.nfs
+      nfs_exports: [
+        "/mnt/seedbox-data/Movies *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-data/downloads *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-data/TV *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-config/deluge *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-config/jackett *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-config/sonarr *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-config/radarr *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-config/ombi *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+      ]

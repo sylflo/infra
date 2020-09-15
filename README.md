@@ -159,6 +159,27 @@ sudo wg
 sudo ip a show wg0
 ```
 
+### NFS
+
+Decrypt luks disk which is used by the NFS server
+
+```
+sudo cryptsetup luksOpen /dev/md0 md0vg
+```
+
+Mount the volumes
+
+```
+sudo mount  /dev/mapper/md0vg-seedbox--config /mnt/seedbox-config/
+sudo mount  /dev/mapper/md0vg-seedbox--data /mnt/seedbox-data/
+```
+
+Launch the Ansible playbook to install a NFS server and link it with the volumes previously mounted
+
+```
+cd ansible/nfs/ 
+ansible-playbook -K -i ../inventory ./main.yaml    
+```
 
 ### Kubernetes
 
