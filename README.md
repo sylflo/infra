@@ -183,17 +183,6 @@ qemu-img resize ubuntu-worker-1.qcow2 +10G
 qemu-img resize ubuntu-worker-2.qcow2 +10G
 ```
 
-- attach /dev/sdx (disk only for data) to worker-1, example
-
-`sudo mkdir  /var/lib/rancher/k3s/storage`
-
-```
-/etc/fstab
-/dev/vdb       /var/lib/rancher/k3s/storage            ext4    defaults        0 2
-```
-
-Reload fstab `sudo mount -a`
-
 ### Provision cluster
 
 #### Secrets
