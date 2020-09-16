@@ -1,0 +1,13 @@
+terraform {
+  required_version          = ">= 0.12"
+
+  backend "s3" {
+    shared_credentials_file = "./aws_creds"
+    bucket                  = "yourBucketName"
+    key                     = "global/s3/terraform.tfstate"
+    region                  = "eu-west-1"
+
+    dynamodb_table          = "yourDynamodbTable"
+    encrypt                 = true
+  }
+}
