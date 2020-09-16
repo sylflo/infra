@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker
+    restart: unless-stopped
+    environment:
+      - TZ="Europe/Paris"
+      - PLEX_CLAIM="{{ claim_token }}"
+    network_mode: host
+    volumes:
+      - /mnt/seedbox-config/plex:/config
+      - /mnt/seedbox-data/:/data:ro
+      - /opt/plex/volumes/transcode:/transcode
+    devices:
+      - /dev/dri:/dev/dri

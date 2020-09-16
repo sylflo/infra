@@ -20,7 +20,8 @@ iface br0 inet static
         bridge_ports eno1
         bridge_stp off
         bridge-fd 0
-
+        post-up "iptables -A FORWARD -p all -i br0 -j ACCEPT"
+        post-down "iptables -D FORWARD -p all -i br0 -j ACCEPT"
 
 # Kubernetes
 auto br10
@@ -31,3 +32,5 @@ iface br10 inet static
         bridge_ports none
         bridge_stp off
         bridge-fd 0
+        post-up "iptables -A FORWARD -p all -i br10 -j ACCEPT"
+        post-down "iptables -D FORWARD -p all -i br10 -j ACCEPT"

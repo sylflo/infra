@@ -1,0 +1,59 @@
+---
+- hosts: hypervisor
+  remote_user: "sylflo"
+  become: yes
+
+  tasks:
+    # Install Docker
+    - name: Install a list of common packages
+      apt:
+        pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg-agent
+        - software-properties-common
+      tags: docker
+    - name: Add Docker apt key by
+      apt_key:
+        keyserver: https://download.docker.com/linux/ubuntu/gpg
+        id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+      tags: docker
+    - name: Add Docker repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/debian buster stable
+        state: present
+      tags: docker
+    - name: Install Docker from packages
+      apt:
+        pkg:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+      tags: docker
+    - name: Install docker-compose
+      get_url: 
+        url : "https://github.com/docker/compose/releases/download/1.27.3/docker-compose-Linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+      tags: docker
+
+    # Launch plex 
+    - name: Create folder /opt/plex/volumes
+      file:
+        path: /opt/plex/volumes
+        state: directory
+        recurse: yes
+      tags: plex
+    - name: Copy docker-compose template
+      template:
+        src: ./templates/docker-compose-plex.yaml.j2
+        dest: /opt/plex/docker-compose.yaml
+      vars:
+        claim_token: "{{ claim_token }}"
+      tags: plex
+    - name: Launch docker-compose up -d
+      command: docker-compose up -d
+      args:
+        chdir: /opt/plex/
+      tags: plex
