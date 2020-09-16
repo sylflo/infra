@@ -42,14 +42,12 @@
         path:  /var/lib/libvirt/images/pfsense
         state: directory
         mode: '0755'
-      tags:
-        - pfsense
+      tags: pfsense
     - name: Download pfsense iso file
       get_url:
         url:  https://frafiles.pfsense.org/mirror/downloads/{{ pfsense_version }}.iso.gz
         dest: /var/lib/libvirt/images/pfsense/pfSense.iso.gz
-      tags:
-        - pfsense
+      tags: pfsense
     - name: Unarchive pfsense iso file
       command: gunzip pfSense.iso.gz
       args:
@@ -68,5 +66,23 @@
       vars:
         ip_address: "{{ br0_ip_address }}"
         ip_gateway: "{{ br0_ip_gateway }}"
+
+    # Set SSH to listen only to br0 interface
+    - name: Set SSH to listen only to br0 interface
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#ListenAddress 0.0.0.0'
+        line: ListenAddress {{ br0_ip_address }}
+        owner: root
+        group: root
+        mode: '0644'
+      tags: ssh
+    - name: Restart ssh
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: sshd
+      tags: ssh
+
     - name: Reboot
       reboot:
