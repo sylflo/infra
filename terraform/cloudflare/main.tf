@@ -3,7 +3,7 @@
 provider "cloudflare" {
   version = "~> 2.0"
   email   = var.email
-  api_token = var.api_token
+  api_key = var.api_token
 }
 
 resource "cloudflare_zone" "main" {
