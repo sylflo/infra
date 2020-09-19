@@ -29,3 +29,14 @@ resource "cloudflare_record" "private" {
   type    = "A"
   proxied = false
 }
+
+resource "cloudflare_record" "resume" {
+  zone_id = cloudflare_zone.main.id
+
+  name = "resume.${var.domain_name}"
+  type = "CNAME"
+  ttl = "1"
+  proxied = true
+
+  value = "${split(".", var.domain_name)[0]}.netlify.app"
+}
