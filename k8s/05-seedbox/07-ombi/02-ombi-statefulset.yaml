@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: ombi
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+  name: ombi
+  namespace: seedbox
+spec:
+  serviceName: ombi
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ombi
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ombi
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: server
+      annotations:
+        backup.velero.io/backup-volumes: ombi-config
+    spec:
+      containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: 'Europe/Paris'
+        image: linuxserver/ombi
+        name: ombi
+        ports:
+        - containerPort: 3579
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "256Mi"
+        volumeMounts:
+        - mountPath: /config
+          name: ombi-config
+      restartPolicy: Always
+      volumes:
+      - name: ombi-config
+        persistentVolumeClaim:
+          claimName: pvc-ombi
+          readOnly: false

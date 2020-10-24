@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jackett
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: jackett
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  serviceName: jackett
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jackett
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jackett
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: server
+      annotations:
+        backup.velero.io/backup-volumes: jackett-config
+    spec:
+      containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: 'Europe/Paris'
+        image: linuxserver/jackett
+        name: jackett
+        ports:
+        - containerPort: 9117
+        resources:
+          resources:
+          requests:
+            memory: "512Mi"
+          limits:
+            memory: "700Mi"
+        volumeMounts:
+        - mountPath: /config
+          name: jackett-config
+      restartPolicy: Always
+      volumes:
+      - name: jackett-config
+        persistentVolumeClaim:
+          claimName: pvc-jackett
+          readOnly: false

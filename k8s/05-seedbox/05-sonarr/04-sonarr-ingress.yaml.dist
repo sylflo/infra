@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  namespace: seedbox
+  name: sonarr
+  labels:
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: sonarr.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: sonarr
+          servicePort: 8989
+status:
+  loadBalancer: {}

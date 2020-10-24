@@ -1,0 +1,312 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: all
+spec:
+  podSelector: {}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-bitwarden
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: bitwarden
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: bitwarden
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default 
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-deluge
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: deluge
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: deluge
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: sonarr
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: radarr
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8112
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-jackett
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: jackett
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: jackett
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: sonarr
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: radarr
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 9117
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-sonarr
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: sonarr
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: bazarr
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ombi
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8989
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-radarr
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: radarr
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: bazarr
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ombi
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 7878
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-bazarr
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: bazarr
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: bazarr
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 6767
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-ombi
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: ombi
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ombi
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: server
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 3579
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-stream
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: stream
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: stream
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8096
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-heimdall
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: heimdall
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: heimdall
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-nextcloud
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nextcoud
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external-seafile
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: seafile
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: seafile
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: default
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 80

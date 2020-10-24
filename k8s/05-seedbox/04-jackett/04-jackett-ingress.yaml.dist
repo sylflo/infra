@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  namespace: seedbox
+  name: jackett
+  labels:
+    app.kubernetes.io/name: jackett
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: jackett.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: jackett
+          servicePort: 9117
+status:
+  loadBalancer: {}

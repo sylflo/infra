@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: your-domain-name-cert
+  namespace: cert-manager
+spec:
+  secretName: your-domain-name-cert
+  dnsNames:
+  - '*.your-domain-name.com'
+  - 'your-domain-name.com'
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
+  commonName: '*.your-domain-name.com'

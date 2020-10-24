@@ -1,0 +1,141 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-deluge
+  namespace: seedbox
+  labels:
+    name: pvc-deluge
+spec:
+  claimRef:
+    name: pvc-deluge
+    namespace: seedbox
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 100Mi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: data-deluge
+    volumeAttributes:
+      server: 192.168.0.11
+      share: /mnt/seedbox-config/deluge
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-deluge
+  namespace: seedbox
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-download
+  namespace: seedbox
+  labels:
+    name: pvc-download
+spec:
+  claimRef:
+    name: pvc-download
+    namespace: seedbox
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 100Gi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: data-download
+    volumeAttributes:
+      # The nfs server could be a K8s service
+      # server: nfs-server.default.svc.cluster.local
+      server: 192.168.0.11
+      share: /mnt/seedbox-data/downloads
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-download
+  namespace: seedbox
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-movies
+  namespace: seedbox
+  labels:
+    name: pvc-movies
+spec:
+  claimRef:
+    name: pvc-movies
+    namespace: seedbox
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 3000Gi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: data-movies
+    volumeAttributes:
+      # The nfs server could be a K8s service
+      # server: nfs-server.default.svc.cluster.local
+      server: 192.168.0.11
+      share: /mnt/seedbox-data/Movies
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-movies
+  namespace: seedbox
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 3000Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-tv
+  namespace: seedbox
+  labels:
+    name: pvc-tv
+spec:
+  claimRef:
+    name: pvc-tv
+    namespace: seedbox
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 3000Gi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: data-tv
+    volumeAttributes:
+      # The nfs server could be a K8s service
+      # server: nfs-server.default.svc.cluster.local
+      server: 192.168.0.11
+      share: /mnt/seedbox-data/TV
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-tv
+  namespace: seedbox
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 3000Gi

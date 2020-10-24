@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+  name: radarr
+  namespace: seedbox
+spec:
+  serviceName: radarr
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: radarr
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: server
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: radarr
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: server
+      annotations:
+        backup.velero.io/backup-volumes: radarr-config
+    spec:
+      containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: 'Europe/Paris'
+        image: linuxserver/radarr
+        name: radarr
+        ports:
+        - containerPort: 7878
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "256Mi"
+        volumeMounts:
+        - mountPath: /config
+          name: radarr-config
+        - mountPath: /movies
+          name: deluge-data-movies
+        - mountPath: /downloads
+          name: deluge-data-download
+      restartPolicy: Always
+      volumes:
+      - name: radarr-config
+        persistentVolumeClaim:
+          claimName: pvc-radarr
+          readOnly: false
+      - name: deluge-data-movies
+        persistentVolumeClaim:
+          claimName: pvc-movies
+          readOnly: false
+      - name: deluge-data-download
+        persistentVolumeClaim:
+          claimName: pvc-download
+          readOnly: false

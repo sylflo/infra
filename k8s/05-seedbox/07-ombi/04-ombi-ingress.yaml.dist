@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: ombi
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+  name: ombi
+  namespace: seedbox
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: ombi.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: ombi
+          servicePort: 3579
+status:
+  loadBalancer: {}

@@ -1,0 +1,74 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/managed-by: kubectl
+  name: prometheus
+  namespace: monitoring
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: prometheus-k8s.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: monitoring-prometheus-oper-prometheus
+          servicePort: 9090
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/managed-by: kubectl
+  name: alertmanager
+  namespace: monitoring
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: alertmanager-k8s.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: monitoring-prometheus-oper-alertmanager
+          servicePort: 9093
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/managed-by: kubectl
+  name: grafana
+  namespace: monitoring
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: grafana-k8s.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: monitoring-grafana
+          servicePort: 80
+status:
+  loadBalancer: {}

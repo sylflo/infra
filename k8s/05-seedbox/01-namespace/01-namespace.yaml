@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: seedbox
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: all
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: seedbox-limit
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: all
+spec:
+  limits:
+  - default:
+      memory: 64Mi
+    defaultRequest:
+      memory: 64Mi
+    max:
+      memory: 2048Mi
+    min:
+      memory: 64Mi
+    type: Container
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: quota
+  namespace: seedbox
+  labels:
+    app.kubernetes.io/name: seedbox
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: all
+spec:
+  hard:
+    memory: 6Gi
+    pods: "25"
+    resourcequotas: "1"
+    services: "25"

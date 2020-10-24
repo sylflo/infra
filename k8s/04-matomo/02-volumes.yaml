@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: matomo-data-pvc
+  namespace: matomo
+  labels:
+    app.kubernetes.io/name: matomo-data
+    app.kubernetes.io/component: server
+    app.kubernetes.io/managed-by: kubectl
+spec:
+  storageClassName: local-path
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc-matomo
+  namespace: matomo
+  labels:
+    app.kubernetes.io/name: mariadb-matomo
+    app.kubernetes.io/component: database
+    app.kubernetes.io/managed-by: kubectl
+spec:
+  storageClassName: local-path
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-jackett
+  namespace: seedbox
+  labels:
+    name: pvc-jackett
+spec:
+  claimRef:
+    name: pvc-jackett
+    namespace: seedbox
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 100Mi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: data-jackett
+    volumeAttributes:
+      server: 192.168.0.11
+      share: /mnt/seedbox-config/jackett
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-jackett
+  namespace: seedbox
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi

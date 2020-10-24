@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+  name: sonarr
+  namespace: seedbox
+spec:
+  serviceName: sonarr
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: server
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: sonarr
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: server
+      annotations:
+        backup.velero.io/backup-volumes: sonarr-config
+    spec:
+      containers:
+      - env:
+        - name: PGID
+          value: "1000"
+        - name: PUID
+          value: "1000"
+        - name: TZ
+          value: 'Europe/Paris'
+        image: linuxserver/sonarr
+        name: sonarr
+        ports:
+        - containerPort: 8989
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "256Mi"
+        volumeMounts:
+        - mountPath: /config
+          name: sonarr-config
+        - mountPath: /tv
+          name: deluge-data-tv
+        - mountPath: /downloads
+          name: deluge-data-download
+      restartPolicy: Always
+      volumes:
+      - name: sonarr-config
+        persistentVolumeClaim:
+          claimName: pvc-sonarr
+          readOnly: false
+      - name: deluge-data-tv
+        persistentVolumeClaim:
+          claimName: pvc-tv
+          readOnly: false
+      - name: deluge-data-download
+        persistentVolumeClaim:
+          claimName: pvc-download
+          readOnly: false

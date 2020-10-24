@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex-service
+  namespace: seedbox
+spec:
+  ports:
+    - protocol: TCP
+      port: 32400
+      targetPort: 32400
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: plex-service
+  namespace: seedbox
+subsets:
+  - addresses:
+      - ip: 192.168.10.42
+    ports:
+      - port: 32400
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: stream
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+  name: stream
+  namespace: seedbox
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: stream.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: plex-service
+          servicePort: 32400
+status:
+  loadBalancer: {}

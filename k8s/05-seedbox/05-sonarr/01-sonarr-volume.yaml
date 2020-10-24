@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-sonarr
+  namespace: seedbox
+  labels:
+    name: pvc-sonarr
+spec:
+  claimRef:
+    name: pvc-sonarr
+    namespace: seedbox
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 100Mi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: data-sonarr
+    volumeAttributes:
+      server: 192.168.0.11
+      share: /mnt/seedbox-config/sonarr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-sonarr
+  namespace: seedbox
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi

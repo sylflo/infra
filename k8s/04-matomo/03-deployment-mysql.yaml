@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: matomo-mariadb
+  namespace: matomo
+  labels:
+    app.kubernetes.io/name: mariadb
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: matomo 
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app.kubernetes.io/name: mariadb
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: matomo
+  clusterIP: None
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: mysql
+  namespace: matomo
+spec:
+  encryptedData:
+    root_password: AgAWkcSUvIShocv2SeGYR9xPgyUEOXEoWe30hi7r4nqmPRFDVTdX1H+QM1O785EmIWmrhgwKeaAzzHV5GvAvppob2JIaQTL7UGihlHWrxVh6/aXLeDElm+QjO1070+vDo1ZEMKKC/szKSKRdwyMTNHSRCOJawWl05AnESir0/SBOjEdzfJux7NARVty6+pZd6MLgFEDNCJqLZr4u0pdb02pIDNnE3VuURFBinqWWwo1t9cAUwyNWpr/k5cqoUmCSap6HJZ0VAnwOnzd7Dg401RnoYV8Ktn8NAdDi2jHSfaOe2JDbYWT/Ijr/K2xrASGNyo8IBRhPEPNae2ONU8ILEzwJI+t+9mTwLknDgPoFdguC7bkFP0oqaj+qr+QJWp1NqmwyBRrtHhC0GcFxSy550ZmT7Vu4AIdlFrxPdcbp2sPtEaNQoslTFDihl7xp88KE+uEsBF/g18F61EeyYgamX+y27AC2M7bCdiec9KqhejUipfwjm9uqf8Juph+rZuY5YTEULDcsiApPOwKSd35sd6D7C1l7LPrQ6ENeU/4DHitLaw9FSqBnwZQk2YxLLTl9lUpRlB0NY77d7POCYZycyTRwi4dpOwJxDhfvwON2ksLvRciltmR9gSLtjvGLyLNfqeF9BGWsFTwX8vGe9UdWxqA16z12P7Iv37PZsxo8VxutmBIm0GRV0cHYV9Zmbwla+MzD67laykYeT7fl+1BSv7/6X+U1+4a6Urz6se+rYMecOOd621SK2erpPJ8XkSSrCQ==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: mysql
+      namespace: matomo
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: matomo-mariadb
+  namespace: matomo
+  labels:
+    app.kubernetes.io/name: mariadb
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: matomo
+spec:
+  serviceName: matomo-mariadb
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mariadb
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: database
+      app.kubernetes.io/part-of: matomo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mariadb
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: database
+        app.kubernetes.io/part-of: matomo
+      annotations:
+        backup.velero.io/backup-volumes: mariadb-persistent-storage
+    spec:
+      containers:
+      - image: mariadb
+        name: mariadb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql
+              key: root_password
+        ports:
+        - containerPort: 3306
+          name: mariadb
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "512Mi"
+        volumeMounts:
+        - name: mariadb-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mariadb-persistent-storage
+        persistentVolumeClaim:
+          claimName: mariadb-pvc-matomo

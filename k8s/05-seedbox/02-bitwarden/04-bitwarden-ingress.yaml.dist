@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: bitwarden
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+  name: bitwarden
+  namespace : seedbox
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: bitwarden.your-domain-name.com
+    http:
+      paths:
+      - backend:
+          serviceName: bitwarden
+          servicePort: 80
+status:
+  loadBalancer: {}
