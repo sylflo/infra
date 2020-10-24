@@ -23,14 +23,15 @@ iface br0 inet static
         post-up "iptables -A FORWARD -p all -i br0 -j ACCEPT"
         post-down "iptables -D FORWARD -p all -i br0 -j ACCEPT"
 
+
 # Kubernetes
 auto br10
-iface br10 inet static
-        address 192.168.10.10
-        netmask 24
-        gateway 192.168.10.254
+iface br10 inet manual
         bridge_ports none
-        bridge_stp off
-        bridge-fd 0
         post-up "iptables -A FORWARD -p all -i br10 -j ACCEPT"
         post-down "iptables -D FORWARD -p all -i br10 -j ACCEPT"
+
+# Plex
+auto br20
+iface br20 inet manual
+        bridge_ports none

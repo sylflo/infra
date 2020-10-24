@@ -6,11 +6,25 @@ services:
     restart: unless-stopped
     environment:
       - TZ="Europe/Paris"
-      - PLEX_CLAIM="{{ claim_token }}"
-    network_mode: host
+      - PLEX_CLAIM="claim-zUG7TW-G6DAx-ya5yxKx"
+    #network_mode: host
     volumes:
       - /mnt/seedbox-config/plex:/config
       - /mnt/seedbox-data/:/data:ro
       - /opt/plex/volumes/transcode:/transcode
+    #ports:
+    #  - "32400:32400"
+    networks:
+      plex_vlan:
+        ipv4_address: 192.168.20.42
     devices:
       - /dev/dri:/dev/dri
+
+networks:
+  plex_vlan:
+    driver: macvlan
+    driver_opts:
+      parent: br20
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
