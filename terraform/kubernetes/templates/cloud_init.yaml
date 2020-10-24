@@ -5,6 +5,6 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     lock_passwd: false
-    passwd: $1$7IiAD+oL$x74MQltAZhAzAsa.xeVmG/
+    passwd: $6$rounds=4096$fcZOyyr4dOvf40U$eF7e/N35aA.QEx6MyjN95jKYIZt3fiVTtQLjafa2MK66RZ99vM9G21WVGYqb8u/.vnHHULNmR05j0pmrt7fCY/
     ssh_authorized_keys:
       - ${public_ssh_key}
