@@ -1,0 +1,8 @@
+03-cert-mananger/03-cluster_issuer.yaml
+03-cert-mananger/04-certificate.yaml
+05-seedbox/03-deluge/04-deluge-ingress.yaml
+05-seedbox/04-jackett/04-jackett-ingress.yaml
+05-seedbox/05-sonarr/04-sonarr-ingress.yaml
+05-seedbox/06-radarr/04-radarr-ingress.yaml
+05-seedbox/07-ombi/04-ombi-ingress.yaml
+05-seedbox/08-stream/stream.yaml
