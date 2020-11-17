@@ -5,17 +5,19 @@
 
   tasks:
     # Set ipv4 forward
-    - sysctl:
-      name: net.ipv4.ip_forward
-      value: '1'
-      sysctl_set: yes
-      state: present
-      reload: yes
+    - name: "Set ipv4 forward"
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: yes
+        state: present
+        reload: yes
     # Install WireGuard and create keys for server and client
     - name: "Install wireguard"
       apt:
         name: [wireguard, wireguard-tools, openresolv]
         state: present
+        update_cache: yes
     - name: "Generate public and private key for server"
       shell: umask 077; wg genkey | tee server_private_key | wg pubkey > server_public_key
       args:
