@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker
+    restart: unless-stopped
+    environment:
+      - TZ="Europe/Paris"
+      - PLEX_CLAIM="claim-zUG7TW-G6DAx-ya5yxKx"
+    volumes:
+      - /mnt/seedbox-config/plex:/config
+      - /mnt/seedbox-data/:/data:ro
+      - ./volumes/transcode:/transcode
+    networks:
+      plex_vlan:
+        ipv4_address: 192.168.10.42
+    devices:
+      - /dev/dri:/dev/dri
+
+  unifi-controller:
+    image: ghcr.io/linuxserver/unifi-controller
+    container_name: unifi-controller
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - MEM_LIMIT=1024M #optional
+    volumes:
+      - ./volumes/unifi:/config
+    networks:
+      lan_vlan:
+        ipv4_address: 192.168.0.42
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: watchtower plex unifi-controller --interval 30
+    restart: unless-stopped
+
+networks:
+  plex_vlan:
+    driver: macvlan
+    driver_opts:
+      parent: br10
+    ipam:
+      config:
+        - subnet: 192.168.10.0/24
+          gateway: 192.168.10.254
+
+  lan_vlan:
+    driver: macvlan
+    driver_opts:
+      parent: br0
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.254
