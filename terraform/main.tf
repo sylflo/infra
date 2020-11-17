@@ -59,6 +59,10 @@ module "cloudflare" {
       name        = "alertmanager-k8s",
       ip_address  = "192.168.10.20"
     },
+    {
+      name        = "foldingathome",
+      ip_address  = "192.168.10.20"
+    },
   ]
 }
 
@@ -83,7 +87,7 @@ module "misc" {
       cpu         = 1,
       ip_address  = "192.168.0.20"
       ip_gateway  = "192.168.0.254"
-      ip_dns      = "193.138.218.74"
+      ip_dns      = "192.168.0.254"
     },
   ]
 }

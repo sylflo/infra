@@ -1,4 +1,4 @@
-version: '3.8'
+version: '2.7'
 services:
   plex:
     container_name: plex
@@ -16,6 +16,7 @@ services:
         ipv4_address: 192.168.10.42
     devices:
       - /dev/dri:/dev/dri
+    restart: always
 
   unifi-controller:
     image: ghcr.io/linuxserver/unifi-controller
@@ -29,15 +30,31 @@ services:
     networks:
       lan_vlan:
         ipv4_address: 192.168.0.42
+    restart: always
+
+  foldingathome:
+    image: ghcr.io/linuxserver/foldingathome
+    cpus: 8
+    cpus: 0.5
+    container_name: foldingathome
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - ./volumes/folding@home:/config
+    networks:
+      folding_at_home_vlan:
+        ipv4_address: 192.168.20.1
+    restart: always
 
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /root/.docker/config.json:/config.json
-    command: watchtower plex unifi-controller --interval 30
-    restart: unless-stopped
+    command: watchtower plex unifi-controller foldingathome
+    restart: always
 
 networks:
   plex_vlan:
@@ -57,3 +74,13 @@ networks:
       config:
         - subnet: 192.168.0.0/24
           gateway: 192.168.0.254
+
+  folding_at_home_vlan:
+    driver: macvlan
+    driver_opts:
+      parent: br20
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
+          gateway: 192.168.20.254
+  
