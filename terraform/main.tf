@@ -28,6 +28,14 @@ module "cloudflare" {
       name        = "matomo",
       ip_address  = var.public_ip_address
     },
+    {
+     name         = "location",
+     ip_address   = var.public_ip_address
+    },
+    {
+     name         = "renting_back",
+     ip_address   = var.public_ip_address
+    }
   ]
 
   private_records      = [
