@@ -71,6 +71,14 @@ module "cloudflare" {
       name        = "foldingathome",
       ip_address  = "192.168.10.20"
     },
+    {
+      name        = "router",
+      ip_address  = "192.168.10.20"
+    },
+    {
+      name        = "switch",
+      ip_address  = "192.168.10.20"
+    },
   ]
 }
 

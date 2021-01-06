@@ -37,7 +37,7 @@ resource "libvirt_volume" "ubuntu-qcow2" {
 data "template_file" "user_data" {
   count     = length(var.vms) 
 
-  template  = "${file("${path.module}/templates/cloud_init.yaml")}"
+  template  = file("${path.module}/templates/cloud_init.yaml")
   vars = {
     hostname        = var.vms[count.index].name
     public_ssh_key  = file(var.public_ssh_key)
@@ -47,7 +47,7 @@ data "template_file" "user_data" {
 data "template_file" "network_config" {
   count     = length(var.vms) 
 
-  template  = "${file("${path.module}/templates/network_config.yaml")}"
+  template  = file("${path.module}/templates/network_config.yaml")
   vars = {
     ip_address = var.vms[count.index].ip_address
     ip_gateway = var.vms[count.index].ip_gateway
