@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -18,8 +18,12 @@ spec:
   - host: ombi.your-domain-name.com
     http:
       paths:
-      - backend:
-          serviceName: ombi
-          servicePort: 3579
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: ombi
+            port:
+              number: 3579
 status:
   loadBalancer: {}

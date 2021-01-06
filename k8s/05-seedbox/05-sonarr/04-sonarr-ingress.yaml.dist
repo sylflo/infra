@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -18,8 +18,12 @@ spec:
   - host: sonarr.your-domain-name.com
     http:
       paths:
-      - backend:
-          serviceName: sonarr
-          servicePort: 8989
+      - path: "/"
+        pathType: Prefix
+        backend:
+            service:
+              name: sonarr
+              port:
+                number: 8989
 status:
   loadBalancer: {}
