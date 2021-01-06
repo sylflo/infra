@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -14,16 +14,20 @@ spec:
       - "*.your-domain-name.com"
       secretName: your-domain-name-com-cert
   rules:
-  - host: prometheus-k8s.your-domain-name.com
+  - host: prometheus.your-domain-name.com
     http:
       paths:
-      - backend:
-          serviceName: monitoring-prometheus-oper-prometheus
-          servicePort: 9090
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus-k8s
+            port:
+              number: 9090  
 status:
   loadBalancer: {}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -39,16 +43,20 @@ spec:
       - "*.your-domain-name.com"
       secretName: your-domain-name-com-cert
   rules:
-  - host: alertmanager-k8s.your-domain-name.com
+  - host: alertmanager.your-domain-name.com
     http:
       paths:
-      - backend:
-          serviceName: monitoring-prometheus-oper-alertmanager
-          servicePort: 9093
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: alertmanager-main
+            port:
+              number: 9093
 status:
   loadBalancer: {}
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -64,11 +72,15 @@ spec:
       - "*.your-domain-name.com"
       secretName: your-domain-name-com-cert
   rules:
-  - host: grafana-k8s.your-domain-name.com
+  - host: grafana.your-domain-name.com
     http:
       paths:
-      - backend:
-          serviceName: monitoring-grafana
-          servicePort: 80
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
 status:
   loadBalancer: {}
