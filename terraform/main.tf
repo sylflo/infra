@@ -79,6 +79,14 @@ module "cloudflare" {
       name        = "switch",
       ip_address  = "192.168.10.20"
     },
+    {
+      name        = "unifi",
+      ip_address  = "192.168.10.20"
+    },
+    {
+      name        = "cockpit",
+      ip_address  = "192.168.10.20"
+    },
   ]
 }
 

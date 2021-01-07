@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cockpit-service
+  namespace: default
+spec:
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: cockpit-service
+  namespace: default
+subsets:
+  - addresses:
+      - ip: 192.168.0.11
+    ports:
+      - port: 9090
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: cockpit
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+  name: cockpit
+  namespace: default
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: cockpit.your-domain-name.com
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: cockpit-service
+            port:
+              number: 9090
+status:
+  loadBalancer: {}
