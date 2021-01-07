@@ -1,0 +1,50 @@
+---
+- hosts: hypervisor
+  remote_user: "{{ username }}"
+  become: yes
+
+  tasks:
+    - name: Create netlify directory in /opt and .kube folder in home directory
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - /opt/netlify
+        - "/home/{{ username }}/.kube"
+    - name: Copy kubeconfig
+      copy:
+        src: ./src/kubeconfig
+        dest: "/home/{{ username }}/.kube/config"
+    - name: Copy netlify.py and requirements.txt file to /opt/
+      copy:
+        src: "./src/{{ item }}"
+        dest: "/opt/netlify/{{ item }}"
+      loop:
+        - netlify.py
+        - requirements.txt
+    - name: Install pip3
+      apt:
+        name: python3-pip
+        state: present
+    - name: Install virtualenv with pip
+      pip:
+        name: virtualenv
+    - name: Install requirements
+      pip: 
+        requirements: /opt/netlify/requirements.txt
+        virtualenv: /opt/netlify/.env
+        virtualenv_python: python3
+    - name: Copy netlify.service.j2
+      template:
+        src: ./src/netlify.service.j2
+        dest: /etc/systemd/system/netlify.service
+    - name: Copy netlify.timer
+      copy:
+        src: ./src/netlify.timer
+        dest: /etc/systemd/system/netlify.timer
+    - name: Start, reload and enabled netlify.timer service
+      systemd:
+        name: netlify.timer
+        enabled: yes
+        daemon_reload: yes
+        state: restarted

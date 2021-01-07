@@ -1,0 +1,11 @@
+[Unit]
+
+Description=Run netlify service every week
+Requires=netlify.service
+
+[Timer]
+Unit=netlify.service
+OnUnitActiveSec=1w
+
+[Install]
+WantedBy=timers.target

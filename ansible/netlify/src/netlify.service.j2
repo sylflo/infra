@@ -1,0 +1,18 @@
+
+[Unit]
+Description="Renew certificate of a domain using Netlify API"
+Wants=netlify.timer
+
+[Service]
+ExecStart=/opt/netlify/.env/bin/python /opt/netlify/netlify.py
+WorkingDirectory=/opt/netlify
+User=sylflo
+Environment="NETLIFY_API={{ netlify.api }}"
+Environment="NETLIFY_TOKEN={{ netlify.token }}"
+Environment="NETLIFY_SITE_ID={{ netlify.site_id }}"
+Environment="K8S_SECRET_NAME={{ k8s.secret_name }}"
+Environment="K8S_NAMESPACE={{ k8s.namespace }}"
+
+
+[Install]
+WantedBy=multi-user.target
