@@ -5,12 +5,13 @@
   roles:
     - role: geerlingguy.nfs
       nfs_exports: [
-        "/mnt/seedbox-data/Movies *(rw,sync,no_subtree_check,no_root_squash,insecure)",
-        "/mnt/seedbox-data/downloads *(rw,sync,no_subtree_check,no_root_squash,insecure)",
-        "/mnt/seedbox-data/TV *(rw,sync,no_subtree_check,no_root_squash,insecure)",
-        "/mnt/seedbox-config/deluge *(rw,sync,no_subtree_check,no_root_squash,insecure)",
-        "/mnt/seedbox-config/jackett *(rw,sync,no_subtree_check,no_root_squash,insecure)",
-        "/mnt/seedbox-config/sonarr *(rw,sync,no_subtree_check,no_root_squash,insecure)",
-        "/mnt/seedbox-config/radarr *(rw,sync,no_subtree_check,no_root_squash,insecure)",
-        "/mnt/seedbox-config/ombi *(rw,sync,no_subtree_check,no_root_squash,insecure)",
+        "/mnt/seedbox-data/Movies 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/seedbox-data/downloads 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/seedbox-data/TV 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/seedbox-config/deluge 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/seedbox-config/jackett 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/seedbox-config/sonarr 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/seedbox-config/radarr 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/seedbox-config/ombi 192.168.10.20/24(rw,no_root_squash)",
+        "/mnt/pictures/photoprism 192.168.10.20/24(rw,no_root_squash)",
       ]
