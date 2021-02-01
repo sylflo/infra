@@ -105,14 +105,6 @@ module "misc" {
   server_name     = var.server_name
   public_ssh_key  = var.public_ssh_key
   vms = [
-    {
-      name        = "vpn",
-      memory      = "512",
-      cpu         = 1,
-      ip_address  = "192.168.0.20"
-      ip_gateway  = "192.168.0.254"
-      ip_dns      = "192.168.0.254"
-    },
   ]
 }
 
