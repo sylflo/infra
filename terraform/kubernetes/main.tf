@@ -80,7 +80,7 @@ resource "libvirt_domain" "ubuntu-machine_master" {
   cloudinit       = element(libvirt_cloudinit_disk.commoninit_master.*.id, count.index)
 
   network_interface {
-    bridge         = "br10"
+    bridge         = "br100"
   }
 
   # IMPORTANT: this is a known bug on cloud images, since they expect a console
@@ -159,7 +159,7 @@ resource "libvirt_domain" "ubuntu-machine_worker" {
   cloudinit       = element(libvirt_cloudinit_disk.commoninit_worker.*.id, count.index)
 
   network_interface {
-    bridge        = "br10"
+    bridge        = "br100"
   }
 
   # IMPORTANT: this is a known bug on cloud images, since they expect a console

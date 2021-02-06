@@ -90,14 +90,6 @@ module "cloudflare" {
   ]
 }
 
-
-module "pfsense" {
-  source      = "./pfsense"
-
-  ssh_user    = var.ssh_user
-  server_name = var.server_name
-}
-
 module "misc" {
   source          = "./misc"
 
@@ -119,8 +111,8 @@ module "kubernetes" {
     {
       memory      = "4096"
       cpu         = 2
-      ip_address  = "192.168.10.20"
-      ip_gateway  = "192.168.10.254"
+      ip_address  = "192.168.100.10"
+      ip_gateway  = "192.168.100.254"
       ip_dns      = "193.138.218.74"
     }
   ]
@@ -128,16 +120,16 @@ module "kubernetes" {
     {
       memory      = "4096"
       cpu         = 2
-      ip_address  = "192.168.10.30"
-      ip_gateway  = "192.168.10.254"
+      ip_address  = "192.168.100.20"
+      ip_gateway  = "192.168.100.254"
       ip_dns      = "193.138.218.74"
       attach_disk = false
     },
     {
       memory      = "8192"
       cpu         = 2
-      ip_address  = "192.168.10.31"
-      ip_gateway  = "192.168.10.254"
+      ip_address  = "192.168.100.21"
+      ip_gateway  = "192.168.100.254"
       ip_dns      = "193.138.218.74"
       attach_disk = true
     }
