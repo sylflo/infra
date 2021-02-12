@@ -41,51 +41,51 @@ module "cloudflare" {
   private_records      = [
     {
       name        = "deluge",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "jackett",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "sonarr",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "radarr",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "grafana-k8s",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "prometheus-k8s",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "alertmanager-k8s",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "foldingathome",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "router",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "switch",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "unifi",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
     {
       name        = "cockpit",
-      ip_address  = "192.168.10.20"
+      ip_address  = "192.168.100.100"
     },
   ]
 }
