@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: renting-backend
+  namespace: renting
+  labels:
+    app.kubernetes.io/name: backend
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: renting
+spec:
+  serviceName: backend
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: backend
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: server
+      app.kubernetes.io/part-of: renting
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: backend
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: server
+        app.kubernetes.io/part-of: renting
+    spec:
+      containers:
+      - env:
+        - name: BASE_DIR
+          value: "/app"
+        - name: REDIS_URL
+          value: "redis://redis:6379"
+        - name: DATABASE_DATA
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: database_data
+        - name: APP_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: app_secret
+        - name: STRIPE_SK
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: stripe_sk
+        - name: SMTP_USER
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: smtp_user
+        - name: SMTP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: smtp_password
+        - name: EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: email
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: password
+        - name: BRAND_NAME
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: brand_name
+        - name: RENTING_ADDRESS
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: renting_address
+        - name: LANDLORD_NAME
+          valueFrom:
+            secretKeyRef:
+              name: backend
+              key: landlord_name
+        - name: MAX_PERSONS
+          value: "4"
+        image: registry.gitlab.com/sylflo/renting:b915d5cdfc0b0854ce262b7f74e4bb42dd5e9d14-backend
+        name: backend
+        ports:
+        - containerPort: 4000
+          name: backend
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "512Mi"

@@ -1,0 +1,69 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: postgres
+  namespace: renting
+spec:
+  encryptedData:
+    renting_password: AgBDhcUuVdAX/zQPrFjWhFOSqp5n7Qg4YNrB0Ng5UGwWtOCyt6lw7/yPzNH9Bp56NQYKu42Ya0jx+kdgy1knndmlIgi/FF5ACdTQyNH5MXYIQGO9fSf+jgj0KQKUAs//zmz1Q9XMPA701lqwfsTttLNrRXEbglja2H//+IotlTlXbdCgrcyI9FBK1gt7Nznjnn/FpMWbuOxbkrNL6loT+Bd9aWz2U16qFRsESQYgzPkOKbEvcobFRMmhHLzDfwEC1pgTF2b41oeZOPnTWhtLqkcM7FSBUAgJKA2i3DEti5oZ5gIfhus3qSQPLhxTiDqTJ2JfQi1bfKyjdTj1HxeHqPOGQSPi4JAdhuYH/4xbkXR0JniJ5kkXy3o2rvPThI95pQf7UYN38TUTdXS6ghpvI7UGwtwOC4faKgvQFz3R+UlBXtvYkjQYjpHM4Etcy8M2Dh63Z/8nVzdwIAqk0YHKlCd0Y2HHmnX065UJtPw9LwCod5qm6IgvKj2SK/o85YOCSU8hqQAdjURgh4vf5f3Chciy3eP6KmQTi7I3/6t07kGbUWkWyurBBJNMzAS9QruqlKXoLRVAtG6zOmpNIm567xYOZNL4RsR+2It7CKO/QacMhJKWrMHt+SfeTB6y773Jp5CKuoaxdZuJIU9qdJKwueFW3RBCl1Q6LewjLo0k1/odcaWBOienRY+L71Wdtm58v0hi0xD+LkT3ibc2wNyJHqfdV0QTSQ==
+  template:
+    metadata:
+      creationTimestamp: null
+      name: postgres
+      namespace: renting
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: renting-postgres
+  namespace: renting
+  labels:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: renting
+spec:
+  serviceName: database
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: database
+      app.kubernetes.io/part-of: renting
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: database
+        app.kubernetes.io/part-of: renting
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: "renting"
+        - name: POSTGRES_USER
+          value: "renting"
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: renting_password
+        image: postgres
+        name: postgres
+        ports:
+        - containerPort: 5432
+          name: postgres
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "512Mi"
+        volumeMounts:
+        - name: postgres-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: postgres-persistent-storage
+        persistentVolumeClaim:
+          claimName: pvc-renting-database

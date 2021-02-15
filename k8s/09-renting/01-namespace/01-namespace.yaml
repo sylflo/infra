@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: renting
+  labels:
+    app.kubernetes.io/name: renting
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: all
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: renting-limit
+  namespace: renting
+  labels:
+    app.kubernetes.io/name: renting
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: all
+spec:
+  limits:
+  - default:
+      memory: 64Mi
+    defaultRequest:
+      memory: 64Mi
+    max:
+      memory: 1024Mi
+    min:
+      memory: 64Mi
+    type: Container
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: quota
+  namespace: renting
+  labels:
+    app.kubernetes.io/name: renting
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: all
+spec:
+  hard:
+    memory: 1Gi
+    pods: "5"
+    resourcequotas: "1"
+    services: "5"

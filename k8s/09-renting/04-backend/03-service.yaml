@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: renting
+  labels:
+    app.kubernetes.io/name: backend
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: renting
+spec:
+  ports:
+    - port: 4000
+  selector:
+    app.kubernetes.io/name: backend
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: server
+    app.kubernetes.io/part-of: renting
+  clusterIP: None

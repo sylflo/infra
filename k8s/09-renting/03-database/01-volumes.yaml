@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvc-renting-database
+  namespace: renting
+  labels:
+    name: pvc-renting-database
+spec:
+  claimRef:
+    name: pvc-renting-database
+    namespace: renting
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 100Mi
+  csi:
+    driver: nfs.csi.k8s.io
+    volumeHandle: data-renting-database
+    volumeAttributes:
+      server: 192.168.0.11
+      share: /mnt/projects/renting/database
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-renting-database
+  namespace: renting
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi

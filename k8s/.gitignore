@@ -6,3 +6,7 @@
 05-seedbox/06-radarr/04-radarr-ingress.yaml
 05-seedbox/07-ombi/04-ombi-ingress.yaml
 05-seedbox/08-stream/stream.yaml
+08-common-ingress-rules/cockpit.ingress.yaml
+08-common-ingress-rules/router.yaml
+08-common-ingress-rules/unifi.yaml
+09-renting/05-admin/03-ingress.yaml

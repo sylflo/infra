@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: renting-redis
+  namespace: renting
+  labels:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: renting
+spec:
+  serviceName: redis
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: database
+      app.kubernetes.io/part-of: renting
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: redis
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: database
+        app.kubernetes.io/part-of: renting
+    spec:
+      containers:
+      - image: redis
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: redis
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "512Mi"
+        volumeMounts:
+        - name: redis-persistent-storage
+          mountPath: /data
+      volumes:
+      - name: redis-persistent-storage
+        persistentVolumeClaim:
+          claimName: pvc-renting-redis

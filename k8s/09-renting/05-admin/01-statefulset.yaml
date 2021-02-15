@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/name: admin
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: admin
+    app.kubernetes.io/part-of: renting
+  name: admin
+  namespace: renting
+spec:
+  serviceName: admin
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: admin
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/component: admin
+      app.kubernetes.io/part-of: renting
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: admin
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/component: admin
+        app.kubernetes.io/part-of: renting
+    spec:
+      containers:
+      - image: registry.gitlab.com/sylflo/renting:b915d5cdfc0b0854ce262b7f74e4bb42dd5e9d14-admin
+        name: admin
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+          limits:
+            memory: "256Mi"
+      imagePullSecrets:
+        - name: regcred
+      restartPolicy: Always

@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    app.kubernetes.io/name: admin
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/component: admin
+    app.kubernetes.io/part-of: renting
+  name: renting
+  namespace: renting
+spec:
+  tls:
+    - hosts:
+      - "*.your-domain-name.com"
+      secretName: your-domain-name-com-cert
+  rules:
+  - host: location.your-domain-name.com
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: admin
+            port:
+              number: 80
+status:
+  loadBalancer: {}
